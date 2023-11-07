@@ -136,7 +136,10 @@ def growth_distortion_metric(slice_t1, slice_t2, Pi, xi, option):
         The growth vector from an inferred alignment
     option: String, one of the following two options
         "no_transition": Assumes no cell type transition, and the growth distortion metric is calculcated based on the intersection of cell types in the two slices
-        "infer_transition": Assumes cell type transition during development, and the growth distortion metric is calculated based on the cell type transition matrix that minimizes the growth distortion metric
+        "infer_transition": Assumes cell type transition during development, and the growth distortion metric is calculated based on the cell type transition matrix that minimizes the growth distortion metric for the given Pi (Section 2.3.1 of the paper)
+
+    Returns:
+    The growth distortion metric of the given Pi and xi.
     """
     l1, l2 = slice_t1.obs['annotation'].tolist(), slice_t2.obs['annotation'].tolist()
     l_merged = l1 + l2
