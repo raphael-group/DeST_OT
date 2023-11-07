@@ -126,9 +126,9 @@ def growth_distortion_metric(slice_t1, slice_t2, Pi, xi, option):
 
     Parameters:
     slice_t1: AnnData object
-        The AnnData object of slice t1
+        The AnnData object of the first slice, with .obs['annotation'] field storing the cell type of each spot.
     slice_t2: AnnData object
-        The AnnData object of slice t2
+        The AnnData object of slice t2, with .obs['annotation'] field storing the cell type of each spot.
     Pi: numpy array of shape (N1, N2)
         Alignment matrix between slice t1 and slice t2
     xi: numpy array of shape (N1)
@@ -162,9 +162,9 @@ def migration_metric(slice_t1, slice_t2, Pi):
 
     Parameters:
     slice_t1: AnnData object
-        An AnnData object of slice t1
+        An AnnData object of slice t1, with .obsm['spatial'] field storing the spatial coordinates.
     slice_t2: AnnData object
-        An AnnData object of slice t2
+        An AnnData object of slice t2, with .obsm['spatial'] field storing the spatial coordinates.
     Pi: numpy array of shape (N1 x N2)
         Alignment matrix between slice t1 and slice t2
 
