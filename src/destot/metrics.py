@@ -41,16 +41,15 @@ def transition_mat(Pi, celltypes1, celltypes2):
     Compute the cell type transition matrix from an alignment matrix Pi (Eq. 10 of the paper)
 
     Parameters:
-    Pi: numpy array of size (N1, N2)
+    Pi: numpy array of shape (N1, N2)
         The alignment matrix
-    celltype1: numpy array of size N1
+    celltype1: numpy array of shape N1
         An array of celltypes for each spot on slice t1
-    celltype2: numpy array of size N2
+    celltype2: numpy array of shape N2
         An array of celltypes for each spot on slice t2
 
     Return:
-    T: numpy array of size (N_CT, N_CT), where N_CT is the total number of cell types
-        The cell type transition matrix
+    The cell type transition matrix, a numpy array of shape (N_CT, N_CT), where N_CT is the total number of cell types
     """
     celltypes_all = np.unique(np.concatenate((celltypes1,celltypes2), axis=0))
     N_CT = celltypes_all.shape[0]
@@ -75,17 +74,17 @@ def growth_distortion_metric_helper(xi, celltypes1, celltypes2, T=None):
     Implementation of the growth distortion metric given the inferred growth vector xi
 
     Parameters:
-    xi: numpy array of size (N1, N2)
+    xi: numpy array of shape (N1, N2)
         The growth vector of a spatiotemporal alignment
-    celltype1: numpy array of size N1
+    celltype1: numpy array of shape N1
         An array of celltypes for each spot on slice t1
-    celltype2: numpy array of size N2
+    celltype2: numpy array of shape N2
         An array of celltypes for each spot on slice t2
-    T: numpy array of size (N1, N2)
+    T: numpy array of shape (N1, N2)
         A cell type transition matrix to compute the growth distortion metric under.
 
     Returns:
-    float, the growth distortion metric
+    the growth distortion metric
     '''
     N1 = xi.shape[0]
     if T is not None:
@@ -127,19 +126,19 @@ def growth_distortion_metric(slice_t1, slice_t2, Pi, xi, option):
 
     Parameters:
     slice_t1: AnnData object
-        An AnnData object of slice t1
+        The AnnData object of slice t1
     slice_t2: AnnData object
-        An AnnData object of slice t2
+        The AnnData object of slice t2
     Pi: numpy array of shape (N1, N2)
         Alignment matrix between slice t1 and slice t2
     xi: numpy array of shape (N1)
-        The growth vector from an inferred alignment
+        The growth vector from the alignment
     option: String, one of the following two options
         "no_transition": Assumes no cell type transition, and the growth distortion metric is calculcated based on the intersection of cell types in the two slices
-        "infer_transition": Assumes cell type transition during development, and the growth distortion metric is calculated based on the cell type transition matrix that minimizes the growth distortion metric for the given Pi (Section 2.3.1 of the paper)
+        "infer_transition": Assumes cell type transition during development, and the growth distortion metric is calculated based on the cell type transition matrix of all cell types that minimizes the growth distortion metric for the given Pi (Section 2.3.1 of the paper)
 
     Returns:
-    The growth distortion metric of the given Pi and xi.
+    The growth distortion metric of the given Pi and xi
     """
     l1, l2 = slice_t1.obs['annotation'].tolist(), slice_t2.obs['annotation'].tolist()
     l_merged = l1 + l2
@@ -166,12 +165,11 @@ def migration_metric(slice_t1, slice_t2, Pi):
         An AnnData object of slice t1
     slice_t2: AnnData object
         An AnnData object of slice t2
-    Pi: Numpy array
+    Pi: numpy array of shape (N1 x N2)
         Alignment matrix between slice t1 and slice t2
 
     Returns:
-    avg_weighted_migration_distance: float
-        The migration metric of Pi
+    The migration metric of Pi
     """
     slice_t1_newcoor_adata, slice_t2_newcoor_adata = partial_stack_slices_pairwise([slice_t1, slice_t2], [Pi])
     
