@@ -37,7 +37,7 @@ def normalize_M(M, C, N1, _ord='fro'):
     '''
     return (torch.linalg.norm(C, ord=_ord)**(1/2) / torch.linalg.norm(M, ord=_ord)) * (N1 )**(1/2)
 
-def LogSinkhorn_iteration(C, D1, D2, C1, C2, Pi_0=None, alpha=0.2, beta=0.5, gamma=10, epsilon=1e-1, max_iter=100, balanced=False, device='cpu', dtype=torch.float64, override_EDM=False, override_FDM=False):
+def LogSinkhorn_iteration(C, D1, D2, C1, C2, Pi_0=None, alpha=0.2, beta=0.5, gamma=50, epsilon=1e-1, max_iter=100, balanced=False, device='cpu', dtype=torch.float64, override_EDM=False, override_FDM=False):
     '''
     Sinkhorn algorithm for the balanced/partially unbalanced case, with log-domain stabilization.
     ------Parameters------
