@@ -48,7 +48,7 @@ def get_free_gpu() -> int:
 
 
 
-def align(slice_t1, slice_t2, alpha=0.2, gamma=10, epsilon=1e-1, max_iter=100, balanced=False, use_gpu=True, normalize_xi=False):
+def align(slice_t1, slice_t2, alpha=0.2, gamma=50, epsilon=1e-1, max_iter=100, balanced=False, use_gpu=True, normalize_xi=False):
     """
     Run DeST-OT
 
@@ -60,7 +60,7 @@ def align(slice_t1, slice_t2, alpha=0.2, gamma=10, epsilon=1e-1, max_iter=100, b
     alpha: float
         A balance parameter between the interslice feature term of the objective and the merged feature-spatial term. Default is 0.2.
     gamma: float
-        A hyperparameter controlling the strength of the KL-divergence term in the objective. Default is 10.
+        A hyperparameter controlling the strength of the KL-divergence term in the objective. Default is 50.
     epsilon: float
         A hyperparameter controlling the strength of the entropic regularization in the Sinkhorn algorithm. Default is 0.1.
     max_iter: int
