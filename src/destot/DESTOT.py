@@ -18,7 +18,6 @@ def intersect(lst1, lst2):
     lst3 = [value for value in lst1 if value in temp]
     return lst3 
 
-
 """
 This function to select a GPU is from the scSLAT package.
 """
@@ -46,7 +45,22 @@ def get_free_gpu() -> int:
     # print(memory_available)
     return index
 
-
+def xi_to_growth_rate(xi, t1=0, t2=1):
+    '''
+    Returns a differential growth rate given the growth vector xi.
+    
+    Parameters:
+    xi: numpy array (N1)
+        Growth vector quantifying the raw mass-flux
+    t1: float
+        First observation timepoint
+    t2: float
+        Second observation timepoint
+    '''
+    N1 = xi.shape[0]
+    Js = np.log(N1*xi + 1) / (t2 - t1)
+    # Returning a proper growth-rate given mass-flux xi
+    return Js
 
 def align(slice_t1, slice_t2, alpha=0.2, gamma=50, epsilon=1e-1, max_iter=100, balanced=False, use_gpu=True, normalize_xi=False):
     """
