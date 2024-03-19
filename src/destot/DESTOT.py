@@ -62,7 +62,7 @@ def xi_to_growth_rate(xi, t1=0, t2=1):
     # Returning a proper growth-rate given mass-flux xi
     return Js
 
-def align(slice_t1, slice_t2, alpha=0.2, gamma=50, epsilon=1e-1, max_iter=100, balanced=False, use_gpu=True, normalize_xi=False):
+def align(slice_t1, slice_t2, alpha=0.2, gamma=50, epsilon=1e-1, max_iter=100, balanced=False, use_gpu=True, normalize_xi=False, check_convergence=False):
     """
     Run DeST-OT
 
@@ -86,12 +86,16 @@ def align(slice_t1, slice_t2, alpha=0.2, gamma=50, epsilon=1e-1, max_iter=100, b
     normalize_xi: bool
         Boolean for whether to normalize the growth vector xi to the unit of number of spots. If True, each entry in xi will be in the unit of number of spots, e.g. xi_i = 1 means spots i will grow into two spots in the next timepoint. Default is False.
         Note: set to False when use the output xi to compute the growth distortion metric.
+    check_convergence: bool
+        Boolean for whether to return the stationarity gap with respect to Pi for each iteration.
 
     Returns:
     Pi: numpy array of shape (N1 x N2)
         The alignment matrix
     xi: numpy array of shape (N1)
         The growth vector
+    errs: list of size (max_iter)
+        If check_convergence is True, return a list of stationarity gaps for each iterations. Used for checking the convergence of Pi.
     """
     # subset for common genes
     common_genes = intersect(slice_t1.var.index, slice_t2.var.index)
@@ -131,4 +135,6 @@ def align(slice_t1, slice_t2, alpha=0.2, gamma=50, epsilon=1e-1, max_iter=100, b
     xi = xi.cpu().detach().numpy()
     if normalize_xi:
         xi = slice_t1.shape[0] * xi
+    if check_convergence:
+        return Pi, xi, errs
     return Pi, xi
