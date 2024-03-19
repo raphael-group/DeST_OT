@@ -7,7 +7,7 @@ A method for aligning spatially resolved transcriptomics time-series.
 
 
 There are four main functions:
-1. `src/destot/DESTOT/align`: Given a pair of ST slices from two developmental timepoints, infer a spatiotemporal alignment matrix Pi and a growth vextor xi.
+1. `src/destot/DESTOT/align`: Given a pair of ST slices from two developmental timepoints, infer a spatiotemporal alignment matrix Pi and a growth vector xi.
 2. `src/destot/DESTOT/xi_to_growth_rate`: Given a growth vector xi, convert the values in the growth vector to a growth rate given the start and end timepoints.
 3. `src/destot/metrics/growth_distortion_metric`: Given a pair of ST slices, their spatiotemporal alignment matrix Pi, and the inferred growth vector xi, calculcate the growth distortion metric as in Eq. 9 of the paper.
 4. `src.destot/metrics/migration_metric`: Given a pair of ST slices and their spatiotemporal alignment matrix Pi, calculate the migration metric as in Eq. 11 of the paper.
