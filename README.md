@@ -20,4 +20,4 @@ If you encounter any problem running the software, please contact Xinhao Liu at 
 
 ## Reference
 Halmos, P., Liu, X., Gold, J., Chen, F., Ding, L. & Raphael, B. J. (2024). DeST-OT: Alignment of Spatiotemporal Transcriptomics Data. bioRxiv.
-The journal version is under review and the citation will be updated once published.
+The journal version is under review and the citation will be updated once published. The bioRxiv version is available here: <https://www.biorxiv.org/content/10.1101/2024.03.05.583575v1>
