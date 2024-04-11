@@ -1,5 +1,5 @@
 # DeST_OT
-Developmental Spatiotemporal Optimal Transport
+**De**velopmental **S**patio**T**emporal **O**ptimal **T**ransport
 
 ![figure_1](https://github.com/raphael-group/DeST_OT/blob/main/fig1.png)
 
