@@ -46,7 +46,7 @@ def get_free_gpu() -> int:
     # print(memory_available)
     return index
 
-def xi_to_growth_rate(xi, t1=0, t2=1):
+def xi_to_growth_rate(xi, t1=0, t2=1, normalize_xi=True):
     '''
     Returns a differential growth rate given the growth vector xi.
     
@@ -57,9 +57,15 @@ def xi_to_growth_rate(xi, t1=0, t2=1):
         First observation timepoint
     t2: float
         Second observation timepoint
+    normalize_xi: bool
+        True if xi normalized to number of cells units (this is the default output of align, using the same flag "normalize_xi"),
+        False if xi directly computed from Pi without renormalization.
     '''
     N1 = xi.shape[0]
-    Js = np.log(N1*xi + 1) / (t2 - t1)
+    if normalize_xi is False:
+        Js = np.log(N1*xi + 1) / (t2 - t1)
+    else:
+        Js = np.log(xi + 1) / (t2 - t1)
     # Returning a proper growth-rate given mass-flux xi
     return Js
 

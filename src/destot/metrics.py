@@ -120,7 +120,7 @@ def growth_distortion_metric_helper(xi, celltypes1, celltypes2, T=None):
     return N1 * distortion_measure
 
 
-def growth_distortion_metric(slice_t1, slice_t2, Pi, xi, option):
+def growth_distortion_metric(slice_t1, slice_t2, Pi, xi=None, annotation_key="annotation", option="infer_transition"):
     """
     Compute the growth distortion metric given two slices, an alignment matrix Pi, and a growth vector xi
 
@@ -131,8 +131,10 @@ def growth_distortion_metric(slice_t1, slice_t2, Pi, xi, option):
         The AnnData object of slice t2, with .obs['annotation'] field storing the cell type of each spot.
     Pi: numpy array of shape (N1, N2)
         Alignment matrix between slice t1 and slice t2
-    xi: numpy array of shape (N1)
-        The growth vector from the alignment
+    xi: numpy array of shape (N1) or NoneType
+        The growth vector from the alignment. If not input, then recomputed from Pi.
+    annotation_key: String
+        The key for the cell-type annotations in the AnnData object
     option: String, one of the following two options
         "no_transition": Assumes no cell type transition, and the growth distortion metric is calculcated based on the intersection of cell types in the two slices
         "infer_transition": Assumes cell type transition during development, and the growth distortion metric is calculated based on the cell type transition matrix of all cell types that minimizes the growth distortion metric for the given Pi (Section 2.3.1 of the paper)
@@ -140,7 +142,13 @@ def growth_distortion_metric(slice_t1, slice_t2, Pi, xi, option):
     Returns:
     The growth distortion metric of the given Pi and xi
     """
-    l1, l2 = slice_t1.obs['annotation'].tolist(), slice_t2.obs['annotation'].tolist()
+    if xi is None:
+        one_N2 = np.ones(Pi.shape[1])
+        g1 = np.ones(Pi.shape[0])/Pi.shape[0]
+        xi = (Pi @ one_N2 - g1)
+    else:
+        pass
+    l1, l2 = slice_t1.obs[annotation_key].tolist(), slice_t2.obs[annotation_key].tolist()
     l_merged = l1 + l2
     categorical_labels, celltypes = pd.factorize(l_merged)
     celltypes1 = categorical_labels[:len(l1)]
