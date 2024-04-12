@@ -69,7 +69,7 @@ def xi_to_growth_rate(xi, t1=0, t2=1, normalize_xi=True):
     # Returning a proper growth-rate given mass-flux xi
     return Js
 
-def align(slice_t1, slice_t2, alpha=0.2, gamma=50, epsilon=1e-1, max_iter=100, balanced=False, use_gpu=True, normalize_xi=False, check_convergence=False):
+def align(slice_t1, slice_t2, alpha=0.2, gamma=50, epsilon=1e-1, max_iter=100, balanced=False, use_gpu=True, normalize_xi=True, check_convergence=False):
     """
     Run DeST-OT
 
