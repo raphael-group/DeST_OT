@@ -3,6 +3,7 @@ from .destot_opt import LogSinkhorn_iteration
 import torch
 import anndata as ad
 import scanpy as sc
+import numpy as np
 from scipy.spatial import distance
 from pynvml import *
 
@@ -131,7 +132,7 @@ def align(slice_t1, slice_t2, alpha=0.2, gamma=50, epsilon=1e-1, max_iter=100, b
 
     # Run DeST-OT
     xi, Pi, errs = LogSinkhorn_iteration(C, D1, D2, C1, C2, alpha=alpha, gamma=gamma, epsilon=epsilon, max_iter=max_iter, balanced=balanced, device=device)
-    pi = pi.cpu().detach().numpy()
+    Pi = Pi.cpu().detach().numpy()
     xi = xi.cpu().detach().numpy()
     if normalize_xi:
         xi = slice_t1.shape[0] * xi
