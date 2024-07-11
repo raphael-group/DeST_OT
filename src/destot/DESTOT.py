@@ -6,7 +6,7 @@ import scanpy as sc
 import numpy as np
 from scipy.spatial import distance
 from pynvml import *
-
+import math
 
 def intersect(lst1, lst2): 
     """
@@ -69,7 +69,7 @@ def xi_to_growth_rate(xi, t1=0, t2=1, normalize_xi=True):
     # Returning a proper growth-rate given mass-flux xi
     return Js
 
-def align(slice_t1, slice_t2, alpha=0.2, gamma=50, epsilon=1e-1, max_iter=100, balanced=False, use_gpu=True, normalize_xi=True, check_convergence=False):
+def align(slice_t1, slice_t2, alpha=0.2, gamma=50, epsilon=1e-1, max_iter=100, balanced=False, use_gpu=True, normalize_counts=True, normalize_spatial=True, normalize_xi=True, check_convergence=False):
     """
     Run DeST-OT
 
@@ -111,10 +111,12 @@ def align(slice_t1, slice_t2, alpha=0.2, gamma=50, epsilon=1e-1, max_iter=100, b
 
     # Calculate gene distances
     joint_adata = ad.concat([slice_t1, slice_t2])
-    sc.pp.normalize_total(joint_adata, inplace=True)
-    sc.pp.log1p(joint_adata)
+    if normalize_counts:
+        sc.pp.normalize_total(joint_adata, inplace=True)
+        sc.pp.log1p(joint_adata)
     sc.pp.pca(joint_adata, 30)
     joint_datamatrix = joint_adata.obsm['X_pca']
+
     X = joint_datamatrix[:slice_t1.shape[0], :]
     Y = joint_datamatrix[slice_t1.shape[0]:, :]
     C = distance.cdist(X, Y)
@@ -123,6 +125,16 @@ def align(slice_t1, slice_t2, alpha=0.2, gamma=50, epsilon=1e-1, max_iter=100, b
     # Calculate spatial distances
     D1 = distance.cdist(slice_t1.obsm['spatial'], slice_t1.obsm['spatial'])
     D2 = distance.cdist(slice_t2.obsm['spatial'], slice_t2.obsm['spatial'])
+
+    if normalize_spatial:
+        D1 /= D1[D1 > 0].min().min()
+        D2 /= D2[D2 > 0].min().min()
+        D1 /= D1[D1 > 0].max()
+        #D1 *= 10
+        D1 *= C1.max()
+        D2 /= D2[D2 > 0].max()
+        #D2 *= 10
+        D2 *= C2.max()
 
     # Pytorch
     if use_gpu:

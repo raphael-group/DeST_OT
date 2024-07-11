@@ -5,6 +5,7 @@ import numpy as np
 import scipy
 import matplotlib.pyplot as plt
 import torch
+import math
 
 def Cost(f, g, Grad, epsilon, device='cpu'):
     '''
@@ -96,7 +97,7 @@ def LogSinkhorn_iteration(C, D1, D2, C1, C2, Pi_0=None, alpha=0.2, beta=0.5, gam
                             torch.linalg.norm(C, ord='fro')/torch.linalg.norm(M1**2, ord='fro') * (N1 / N2**(1/2))
     
     k = 0
-    stationarity_gap = torch.inf
+    stationarity_gap = math.inf
     
     # These are the same for this synthetic data-- change dimensions when we get there
     one_N1 = torch.ones((N1), device=device, dtype=dtype)
@@ -126,7 +127,7 @@ def LogSinkhorn_iteration(C, D1, D2, C1, C2, Pi_0=None, alpha=0.2, beta=0.5, gam
     # unbalanced coefficient
     ubc = gamma/(gamma + epsilon)
     
-    grad = torch.inf
+    grad = math.inf
     while k < max_iter:
         
         if k % 5 == 0:
