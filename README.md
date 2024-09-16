@@ -24,5 +24,5 @@ The journal version is under review and the citation will be updated once publis
 
 The bioRxiv version is available here: <https://www.biorxiv.org/content/10.1101/2024.03.05.583575v1>, and a Zenodo registered DOI is available in the link below
 
-[![DOI](https://zenodo.org/badge/714103322.svg)](https://zenodo.org/doi/10.5281/zenodo.13769696).
+[![DOI](https://zenodo.org/badge/714103322.svg)](https://zenodo.org/doi/10.5281/zenodo.13769696)
 
