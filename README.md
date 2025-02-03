@@ -19,10 +19,9 @@ We will soon make DeST-OT available on PyPi. In the mean time, you can download 
 If you encounter any problem running the software, please contact Xinhao Liu at xl5434@princeton.edu or Peter Halmos at ph3641@princeton.edu
 
 ## Reference
-Halmos, P., Liu, X., Gold, J., Chen, F., Ding, L. & Raphael, B. J. (2024). DeST-OT: Alignment of Spatiotemporal Transcriptomics Data. bioRxiv.
-The journal version is under review and the citation will be updated once published.
+Halmos, P., Liu, X., Gold, J., Chen, F., Ding, L., and Raphael, B. J. DeST-OT: Alignment of Spatiotemporal Transcriptomics Data. Cell Systems, January 2025. ISSN 2405-4712. doi: 10.1016/j.cels.2024.12.001. URL http://dx.doi.org/10.1016/j.cels.2024.12.001.
 
-The bioRxiv version is available here: <https://www.biorxiv.org/content/10.1101/2024.03.05.583575v1>, and a Zenodo registered DOI is available in the link below
+The paper is available here: <[DeST-OT: Alignment of Spatiotemporal Transcriptomics Data.](https://www.cell.com/cell-systems/fulltext/S2405-4712(24)00365-X)>, and a Zenodo registered DOI is available in the link below
 
 [![DOI](https://zenodo.org/badge/714103322.svg)](https://zenodo.org/doi/10.5281/zenodo.13769696)
 
