@@ -110,11 +110,15 @@ def growth_distortion_metric_helper(xi, celltypes1, celltypes2, T=None):
     growth_rates = np.zeros(celltypes.shape[0])
     for p, celltype in np.ndenumerate(celltypes):
         dmP = (m_t[p] - m_tm1[p])/N1
-        growth_rates[p] = gamma_tp = (1/N1)*((m_t[p] - m_tm1[p])/m_tm1[p])
-        xi_p = xi[celltypes1 == celltype]
-        # Sum of squares error of individual cell growth rates,
-        # relative to true cell type specific growth rate.
-        distortion_measure += np.sum( (xi_p - gamma_tp * np.ones(xi_p.shape[0]) )**2 )
+        if m_tm1[p] != 0:
+            growth_rates[p] = gamma_tp = (1/N1)*((m_t[p] - m_tm1[p])/m_tm1[p])
+            xi_p = xi[celltypes1 == celltype]
+            # Sum of squares error of individual cell growth rates,
+            # relative to true cell type specific growth rate.
+            distortion_measure += np.sum( (xi_p - gamma_tp * np.ones(xi_p.shape[0]) )**2 )
+        else:
+            # Pass if undefined.
+            pass
             
     # print(f'Distortion metric value: {N1*distortion_measure}')
     return N1 * distortion_measure
