@@ -69,7 +69,10 @@ def xi_to_growth_rate(xi, t1=0, t2=1, normalize_xi=True):
     # Returning a proper growth-rate given mass-flux xi
     return Js
 
-def align(slice_t1, slice_t2, alpha=0.2, gamma=50, epsilon=1e-1, max_iter=100, balanced=False, use_gpu=True, normalize_xi=True, check_convergence=False):
+def align(slice_t1, slice_t2, alpha=0.2, gamma=50, \
+          epsilon=1e-1, max_iter=100, balanced=False, \
+          use_gpu=True, normalize_xi=True, \
+          check_convergence=False, spatial=True):
     """
     Run DeST-OT
 
@@ -120,10 +123,14 @@ def align(slice_t1, slice_t2, alpha=0.2, gamma=50, epsilon=1e-1, max_iter=100, b
     C = distance.cdist(X, Y)
     C1 = distance.cdist(X, X)
     C2 = distance.cdist(Y, Y)
-    # Calculate spatial distances
-    D1 = distance.cdist(slice_t1.obsm['spatial'], slice_t1.obsm['spatial'])
-    D2 = distance.cdist(slice_t2.obsm['spatial'], slice_t2.obsm['spatial'])
-
+    if spatial:
+        # Calculate spatial distances
+        D1 = distance.cdist(slice_t1.obsm['spatial'], slice_t1.obsm['spatial'])
+        D2 = distance.cdist(slice_t2.obsm['spatial'], slice_t2.obsm['spatial'])
+    else:
+        # Else, only use expression information
+        D1, D2 = np.ones(C1.shape), np.ones(C2.shape)
+    
     # Pytorch
     if use_gpu:
         gpu_index = get_free_gpu()
