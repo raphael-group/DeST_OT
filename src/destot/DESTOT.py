@@ -72,7 +72,8 @@ def xi_to_growth_rate(xi, t1=0, t2=1, normalize_xi=True):
 def align(slice_t1, slice_t2, alpha=0.2, gamma=50, \
           epsilon=1e-1, beta=0.5, max_iter=100, balanced=False, \
           use_gpu=True, normalize_xi=True, \
-          check_convergence=False, spatial=True):
+          check_convergence=False, spatial=True, \
+         feature_key = 'X_pca', spatial_key = 'spatial'):
     """
     Run DeST-OT
 
@@ -106,7 +107,12 @@ def align(slice_t1, slice_t2, alpha=0.2, gamma=50, \
         The growth vector
     errs: list of size (max_iter)
         If check_convergence is True, return a list of stationarity gaps for each iterations. Used for checking the convergence of Pi.
+    feature_key: str, optional (Default = 'X_pca')
+        Key for feature data used for alignment (e.g. transcriptomics PCA vector)
+    spatial_key: str, optional (Default = 'spatial')
+        Key for spatial data used for alignment (e.g. spatial transcriptomics physical coordinates)
     """
+    
     # subset for common genes
     common_genes = intersect(slice_t1.var.index, slice_t2.var.index)
     slice_t1 = slice_t1[:, common_genes]
@@ -117,16 +123,20 @@ def align(slice_t1, slice_t2, alpha=0.2, gamma=50, \
     sc.pp.normalize_total(joint_adata, inplace=True)
     sc.pp.log1p(joint_adata)
     sc.pp.pca(joint_adata, 30)
-    joint_datamatrix = joint_adata.obsm['X_pca']
+    
+    joint_datamatrix = joint_adata.obsm[feature_key]
+    
     X = joint_datamatrix[:slice_t1.shape[0], :]
     Y = joint_datamatrix[slice_t1.shape[0]:, :]
+    
     C = distance.cdist(X, Y)
     C1 = distance.cdist(X, X)
     C2 = distance.cdist(Y, Y)
+    
     if spatial:
         # Calculate spatial distances
-        D1 = distance.cdist(slice_t1.obsm['spatial'], slice_t1.obsm['spatial'])
-        D2 = distance.cdist(slice_t2.obsm['spatial'], slice_t2.obsm['spatial'])
+        D1 = distance.cdist(slice_t1.obsm[spatial_key], slice_t1.obsm[spatial_key])
+        D2 = distance.cdist(slice_t2.obsm[spatial_key], slice_t2.obsm[spatial_key])
     else:
         # Else, only use expression information
         D1, D2 = np.ones(C1.shape), np.ones(C2.shape)
