@@ -29,7 +29,7 @@ def plot_slice_value(slice, value_vec, vmax=None, vmin=None):
     plt.show()
     return
 
-def get_transition(Pi, slice1, slice2, annotation_key = 'Annotation', plotting=True):
+def get_transition(Pi, slice1, slice2, annotation_key = 'Annotation', plotting=True, column = True):
     """
     Computes the transition matrix between cell-types with a doubly-stochastic alignment matrix.
     
@@ -45,6 +45,8 @@ def get_transition(Pi, slice1, slice2, annotation_key = 'Annotation', plotting=T
         Key in 'obs' for accessing cell-types in AnnData objects.
     plotting: bool, optional (default=True)
         Whether to visualize the transition matrix with a heatmap.
+    column: bool, optional (default=True)
+        Whether to return a column-normalized or a row-normalized transition matrix.
     Returns
     -------
     T: np.ndarray
@@ -65,8 +67,12 @@ def get_transition(Pi, slice1, slice2, annotation_key = 'Annotation', plotting=T
     celltypes1 = categorical_labels[:len(l1)]
     celltypes2 = categorical_labels[len(l1):]
 
-    # Computes transitions between cell-types assuming global labels
-    T = transition_mat(Pi, celltypes1, celltypes2)
+    if column:
+        # Computes transitions between cell-types assuming global labels assuming column-normalization
+        T = transition_mat(Pi, celltypes1, celltypes2, column_norm = True)
+    else:
+        # Row-normalized
+        T = transition_mat(Pi, celltypes1, celltypes2, column_norm = False)
     
     unique_celltypes = sorted(set(categorical_labels), key=list(categorical_labels).index)
     ct_labels = [mapping[ct] for ct in unique_celltypes]

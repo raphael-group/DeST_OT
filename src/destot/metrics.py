@@ -36,7 +36,7 @@ def partial_stack_slices_pairwise(slices, pis):
     return new_slices
 
 
-def transition_mat(Pi, celltypes1, celltypes2):
+def transition_mat(Pi, celltypes1, celltypes2, column_norm = True):
     """
     Compute the cell type transition matrix from an alignment matrix Pi (Eq. 10 of the paper)
 
@@ -47,7 +47,9 @@ def transition_mat(Pi, celltypes1, celltypes2):
         An array of celltypes for each spot on slice t1
     celltype2: numpy array of shape N2
         An array of celltypes for each spot on slice t2
-
+    column_norm: bool, optional (default=True)
+        Whether to return a column-normalized or a row-normalized transition matrix.
+        
     Return:
     The cell type transition matrix, a numpy array of shape (N_CT, N_CT), where N_CT is the total number of cell types
     """
@@ -61,11 +63,19 @@ def transition_mat(Pi, celltypes1, celltypes2):
             ct_j = celltypes_all[j]
             mask = np.outer((celltypes1 == ct_i), (celltypes2 == ct_j))
             T[i,j] = np.sum(Pi[mask])
-    
-    col_sums = T.sum(axis=0)
-    non_zero_cols = col_sums != 0
-    T[:, non_zero_cols] /= col_sums[non_zero_cols]
 
+    if column_norm:
+        # Column-normalized
+        
+        col_sums = T.sum(axis=0)
+        non_zero_cols = col_sums != 0
+        T[:, non_zero_cols] /= col_sums[non_zero_cols]
+    else:
+        # Row-normalized
+        
+        row_sums = T.sum(axis=1, keepdims=True)
+        T /= row_sums
+    
     return T
 
 

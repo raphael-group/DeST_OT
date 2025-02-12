@@ -70,7 +70,7 @@ def xi_to_growth_rate(xi, t1=0, t2=1, normalize_xi=True):
     return Js
 
 def align(slice_t1, slice_t2, alpha=0.2, gamma=50, \
-          epsilon=1e-1, max_iter=100, balanced=False, \
+          epsilon=1e-1, beta=0.5, max_iter=100, balanced=False, \
           use_gpu=True, normalize_xi=True, \
           check_convergence=False, spatial=True):
     """
@@ -137,6 +137,7 @@ def align(slice_t1, slice_t2, alpha=0.2, gamma=50, \
         device = torch.device(f'cuda:{gpu_index}' if torch.cuda.is_available() else 'cpu')
     else:
         device='cpu'
+        
     C = torch.from_numpy(C).to(device)
     C1 = torch.from_numpy(C1).to(device)
     C2 = torch.from_numpy(C2).to(device)
@@ -144,11 +145,19 @@ def align(slice_t1, slice_t2, alpha=0.2, gamma=50, \
     D2 = torch.from_numpy(D2).to(device)
 
     # Run DeST-OT
-    xi, Pi, errs = LogSinkhorn_iteration(C, D1, D2, C1, C2, alpha=alpha, gamma=gamma, epsilon=epsilon, max_iter=max_iter, balanced=balanced, device=device)
+    xi, Pi, errs = LogSinkhorn_iteration(C, D1, D2, \
+                                         C1, C2, alpha=alpha, \
+                                         gamma=gamma, epsilon=epsilon, \
+                                         beta=beta, max_iter=max_iter, \
+                                         balanced=balanced, device=device)
+    
     Pi = Pi.cpu().detach().numpy()
     xi = xi.cpu().detach().numpy()
+    
     if normalize_xi:
         xi = slice_t1.shape[0] * xi
+        
     if check_convergence:
         return Pi, xi, errs
+        
     return Pi, xi
